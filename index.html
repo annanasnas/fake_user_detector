@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button class="download">Скачать файл</button>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    let dataForDwnld;
+    let dataForDwnld2;
+    let access_token = ""
+    let fakes = "";
+    let reals = "";
+    $.ajax({
+      url: `https://api.vk.com/method/users.get?fields=has_photo,screen_name,about,personal,connections,contacts,counters,exports,followers_count,has_mobile,is_no_index,last_seen,movies,music,occupation,relatives,relation,verified,site,is_closed,can_write_private_message&user_ids=${reals}, ${fakes}&access_token=${access_token}&v=5.131`,
+      method: 'GET',
+      dataType: 'JSONP',
+      success: function (data) {
+        console.log(data.response)
+        dataForDwnld2 = data.response
+      }
+    });
+    $('.download').on('click', function (event) {
+      event.preventDefault();
+      var blob = new Blob([JSON.stringify(dataForDwnld2)], { type: 'application/json' });
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      var csvUrl = URL.createObjectURL(blob);
+      a.href = csvUrl;
+      a.download = "data.json";
+      a.click();
+      URL.revokeObjectURL(a.href)
+      a.remove();
+    });
+  </script>
+</body>
+
+</html>
